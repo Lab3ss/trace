@@ -1,0 +1,55 @@
+version: "3.7"
+services:
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx/templates/dev:/etc/nginx/templates
+    ports:
+      - "8080:80"
+    environment:
+      - API_PORT=4000
+      - FRONT_PORT=8080
+    networks:
+      - net1
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: MisterFl0k
+      MONGO_INITDB_DATABASE: memos
+    volumes:
+      - ./mongo/init:/docker-entrypoint-initdb.d
+    networks:
+      - net1
+
+  api:
+    build: ./api
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+    networks:
+      - net1
+    volumes:
+      - ./api:/home/node/app
+    expose:
+      - "4000"
+    ports:
+      - "4000:4000"
+    command: bash -c "yarn && yarn start"
+
+  front:
+    build: ./front
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+    volumes:
+      - ./front:/home/node/app
+    networks:
+      - net1
+    command: bash -c "yarn && yarn start"
+    stdin_open: true
+
+networks:
+  net1:

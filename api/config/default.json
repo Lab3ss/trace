@@ -1,0 +1,10 @@
+{
+  "mongo": {
+    "host": "mongo",
+    "username": "floki",
+    "password": "MisterFl0k",
+    "database": "memos",
+    "port": 27017
+  }
+}
+
