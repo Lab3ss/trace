@@ -48,9 +48,12 @@ function App() {
         window.location.pathname = `/${sessionId}/${id}`
     }
 
-    const createTrace = () => {
+    const createTrace = (name) => {
+        const body = new FormData()
+        body.append('name', name)
         fetch(`/api/item/${sessionId}`, {
             method: 'POST',
+            body
         }).then((res) => {
             fetchSessionTraces()
         })
@@ -79,6 +82,12 @@ function App() {
 
   return (
     <div className="App">
+    <div style={{ position: 'absolute', zIndex: 20, top: 0, bottom :0, right: 0, left: 0, display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+      <p style={{ fontFamily: 'IBM Plex Sans, sans-serif', fontWeight: '900', color: '#84868A', fontSize: '2.6rem', opacity: '0.4', textAlign: 'center'}}>
+        Come back here at any time from any where typing :<br />
+      {window.location.href}
+      </p>
+      </div>
       <ul class="circles">
                     <li></li>
                     <li></li>
@@ -91,12 +100,14 @@ function App() {
                     <li></li>
                     <li></li>
             </ul>
+      <div style={{position: 'relative', zIndex: 30, width: '100%'}}>
       {!traceId && (
           <TracesList traces={traces} select={selectTrace} create={createTrace} remove={deleteItem} />
       )}
       { trace && (
           <Trace trace={trace} addItem={addTraceItem} />
     )}
+      </div>
       </div>
   )
 

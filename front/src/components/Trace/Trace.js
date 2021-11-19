@@ -68,9 +68,10 @@ function Trace({ trace, addItem }) {
                     justifyContent: 'center',
                     textAlign: 'center',
                     flexDirection: 'column',
-                    padding: '32px'
+                    padding: '32px',
+                    fontFamily: 'IBM Plex Sans, sans-serif'
                 }}>
-                <Typography variant="h1" sx={{ color: 'text.dark'}}>
+                <Typography variant="h1" sx={{ color: 'primary.ligth'}}>
                     {trace.title}
                 </Typography>
            <StyledTimeline position="alternate">
@@ -105,7 +106,9 @@ function Trace({ trace, addItem }) {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
 
       <div>
-      { displayForm ? <Button variant="outlined" onClick={add} disabled={!date || !title}>Valider</Button> : <Button variant="outlined" onClick={() => setDisplayForm(!displayForm)}>Nouveau</Button> }
+      { displayForm ?
+          <Button size='large' variant="contained" onClick={add} disabled={!date || !title} sx={{opacity: !date || !title ? 0 : 1, fontFamily: 'IBM Plex Sans, sans-serif', fontWeight: 'bold' }}>Confirm</Button> :
+          <Button size='large' variant="contained" onClick={() => setDisplayForm(!displayForm)} sx={{ fontFamily: 'IBM Plex Sans, sans-serif', fontWeight: 'bold' }}>New item</Button> }
       </div>
         <Fade
           in={displayForm}

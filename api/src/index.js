@@ -53,8 +53,7 @@ app.get("/getSessionItems/:sessionId", async (req, res) => {
 });
 
 app.post("/item/:sessionId", async (req, res) => {
-    console.log('HERE : ', req.params.sessionId)
-    Trace.create({ session: req.params.sessionId, date: Date.now(), title: 'Default title', items: [] }, (err, item) => {
+    Trace.create({ session: req.params.sessionId, date: Date.now(), title: req.body.name || 'Default title', items: [] }, (err, item) => {
         if (err) {
             return res.status(500).send()
         }
@@ -71,15 +70,16 @@ app.post("/item/:sessionId/:traceId", async (req, res) => {
     })
 });
 
-/*
 app.delete("/item/:sessionId/:itemId", async (req, res) => {
-    Memo.remove({ _id: req.params.itemId, session: req.params.sessionId }, (err) => {
+    Trace.remove({ _id: req.params.itemId, session: req.params.sessionId }, (err) => {
         if (err) {
             return res.status(500).send()
         }
         return res.send()
     })
 });
+
+/*
 
 app.put("/item/:sessionId/:itemId/color/:color", async (req, res) => {
     console.log('COLOR: ', req.params.color)
