@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from 'react'
-import { format, compareAsc } from 'date-fns'
+import { compareAsc } from 'date-fns'
 import './App.css';
 
 import TracesList from './components/TracesList/TraceList'
 import Trace from './components/Trace/Trace'
 
+const getUrlParameter = (location, name) => {
+    name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]')
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)')
+    var results = regex.exec(location.search)
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '))
+}
+
 function App() {
 
-    const pathname = window.location.pathname;
-    const tmp = pathname.split('/')
+    const urlSessionParam = getUrlParameter(window.location, 's')
+    const urlTraceParam = getUrlParameter(window.location, 't')
 
-    const [sessionId, setSessionId] = useState(tmp[1])
+    const [sessionId, setSessionId] = useState(urlSessionParam)
     const [traces, setTraces] = useState([])
-    const [traceId, setTraceId] = useState(tmp[2])
+    const [traceId, setTraceId] = useState(urlTraceParam)
     const [trace, setTrace] = useState(null)
 
     useEffect(() => {
         if(!sessionId) {
             fetch('/api/getNewSessionId').then((res) => res.text()).then((res) => {
-                window.location.pathname = res
+                window.location.search = `?s=${res}`
                 setSessionId(res)
             })
         } else {
@@ -27,7 +34,6 @@ function App() {
     }, [sessionId])
 
     useEffect(() => {
-        console.log(traceId, traces)
         if (traces && traces.length > 0 && traceId) {
             const selected = traces.find((t) => t.id === traceId)
             if (selected) {
@@ -43,9 +49,8 @@ function App() {
     }
 
     const selectTrace = (id) => {
-       console.log('ID : ', id)
         setTraceId(id)
-        window.location.pathname = `/${sessionId}/${id}`
+        window.location.search = `?s=${sessionId}&t=${id}`
     }
 
     const createTrace = (name) => {
